@@ -7,6 +7,8 @@ from discord import FFmpegPCMAudio
 import pandas as pd
 from pandas import json_normalize
 import requests
+import time
+import asyncio
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -51,9 +53,8 @@ def print_all():
                 data = response.json()
                 print(data)
             else:
-                print(f"Błąd: {response.status_code}")
-
-
+                print(f"Błąd: {response.status_code}")                
+                
 @client.event
 async def on_ready():
     channel = client.get_channel(kanal)
@@ -137,5 +138,38 @@ async def teams(ctx):
 @client.command(pass_context = True)
 async def dataTest(ctx):#debugging func
     print_all()
+    
+@client.command(pass_context = True)
+async def data_pass(ctx):
+    await ctx.send("Choose what you want to display:")
+    i = 1
+    for e in endpoints:
+        await ctx.send(str(i)+". "+e)
+        i+=1
+    time.sleep(1)
+    print("For loop has ended...")
+    def check_endpoint_message(msg):   
+        print(f"Checking message content... \n {msg.content}")
+        return msg.author == ctx.author and msg.channel == ctx.channel and msg.content in ['1','2','3','4','5','6']
+    
+    try:
+        msg = await client.wait_for('message',check = check_endpoint_message, timeout=1000.0)
+        if msg.content == '1':
+            #api call for endpoints[1-1] etc etc ...
+            print(endpoints[0])
+        elif msg.content == '2':
+            print(endpoints[1])
+        elif msg.content == '3':
+            print(endpoints[2])
+        elif msg.content == '4':
+            print(endpoints[3])
+        elif msg.content == '5':
+            print(endpoints[4])
+        elif msg.content == '6':
+            print(endpoints[5])
+    except:
+        await ctx.send("TIMEOUT!!!!")
+
+    
 
 client.run(Klucz_bota)
