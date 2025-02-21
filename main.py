@@ -53,7 +53,20 @@ def print_all():
                 data = response.json()
                 print(data)
             else:
-                print(f"Błąd: {response.status_code}")                
+                print(f"Błąd: {response.status_code}")  
+                             
+def take_endpoint(endpoint_ptr):
+    temp_endpoint = endpoints[endpoint_ptr - 1]
+    endpoint = f"{Base_URL}"+temp_endpoint
+    params = {
+        "api_token": API_token,
+    }
+    response = requests.get(endpoint, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+    else:
+        print(f"Błąd: {response.status_code}")
                 
 @client.event
 async def on_ready():
@@ -141,11 +154,11 @@ async def dataTest(ctx):#debugging func
     
 @client.command(pass_context = True)
 async def data_pass(ctx):
-    await ctx.send("Choose what you want to display:")
     i = 1
     for e in endpoints:
         await ctx.send(str(i)+". "+e)
         i+=1
+    await ctx.send("Choose what you want to display:")
     time.sleep(1)
     print("For loop has ended...")
     def check_endpoint_message(msg):   
@@ -155,18 +168,25 @@ async def data_pass(ctx):
     try:
         msg = await client.wait_for('message',check = check_endpoint_message, timeout=1000.0)
         if msg.content == '1':
-            #api call for endpoints[1-1] etc etc ...
+            take_endpoint(1)
             print(endpoints[0])
         elif msg.content == '2':
+            take_endpoint(2)
             print(endpoints[1])
         elif msg.content == '3':
+            take_endpoint(3)
             print(endpoints[2])
         elif msg.content == '4':
+            take_endpoint(4)
             print(endpoints[3])
         elif msg.content == '5':
+            take_endpoint(5)
             print(endpoints[4])
         elif msg.content == '6':
+            take_endpoint(6)
             print(endpoints[5])
+        else:
+            await ctx.send("Wrong input data!!!")
     except:
         await ctx.send("TIMEOUT!!!!")
 
