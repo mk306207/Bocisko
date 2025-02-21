@@ -14,6 +14,8 @@ intents.members = True
 
 client = commands.Bot(command_prefix = '$', intents=intents)
 
+endpoints = ["/teams","/players","/fixtures","/leagues","/seasons","/standings"]
+
 def get_teams():
     endpoint = f"{Base_URL}/teams"
     params = {
@@ -26,6 +28,30 @@ def get_teams():
     else:
         return {"error": response.text}
 
+def print_all_players():
+    endpoint = f"{Base_URL}/players"
+    params = {
+        "api_token": API_token,
+    }
+    response = requests.get(endpoint, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+    else:
+        print(f"Błąd: {response.status_code}")
+    
+def print_all():
+    for e in endpoints:
+            endpoint = f"{Base_URL}"+e
+            params = {
+                "api_token": API_token,
+            }
+            response = requests.get(endpoint, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                print(data)
+            else:
+                print(f"Błąd: {response.status_code}")
 
 
 @client.event
@@ -107,5 +133,9 @@ async def teams(ctx):
         i+=1
 
     #print(data)
+
+@client.command(pass_context = True)
+async def dataTest(ctx):#debugging func
+    print_all()
 
 client.run(Klucz_bota)
