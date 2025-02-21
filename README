@@ -2,3 +2,8 @@ Jest plik klucze.py w ktorym znajduja sie:
 - klucz bota powiazany z twoim kontem discord
 - numer id kanalu do pisania
 - numer id kanalu powitalnego
+
+Dodatkowo
+API, którego używam to SportMonks wersja darmowa. Dodatkowo powstały 2 nowe zmienne w pliku klucze.py:
+API_token -> twój api token z SportMonks
+Base_URL -> link do API SportMonks
