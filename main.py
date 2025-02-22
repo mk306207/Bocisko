@@ -12,6 +12,7 @@ import time
 import asyncio
 from player import Player
 from match import Match
+from season import Season
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -140,7 +141,27 @@ async def decide(endpoint,data,ctx):
         print("leagues data")
     
     elif endpoint == "/seasons":
-        print("players data")
+        if "error" in data:
+            return 3
+        
+        print("Method initializes...")
+        
+        seasons_list = []
+        for season in data['data']:
+            season_id = season['id']
+            season_name = season['name']
+            season_state = season['is_current']
+            
+            temp = Season(season_id,season_name,season_state)
+            seasons_list.append(temp)
+        
+        
+        print("All seasons have been loaded...")
+        for s in seasons_list:
+            await ctx.send(s.showSeason())
+        
+        print("seasons data")
+        
     elif endpoint == "/standings":
         print("players data")
 
@@ -245,7 +266,7 @@ async def data_pass(ctx):
         return msg.author == ctx.author and msg.channel == ctx.channel and msg.content in ['1','2','3','4','5','6']
     
     try:
-        msg = await client.wait_for('message',check = check_endpoint_message, timeout=5000.0)
+        msg = await client.wait_for('message',check = check_endpoint_message, timeout=10000.0)
         if msg.content == '1':
             await take_endpoint(1,ctx)
             print(endpoints[0])
