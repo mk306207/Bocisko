@@ -11,6 +11,7 @@ import requests
 import time
 import asyncio
 from player import Player
+from match import Match
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -74,7 +75,6 @@ async def decide(endpoint,data,ctx):
 
     if endpoint == "/teams":
         if "error" in data:
-            #await ctx.send(f"Błąd podczas pobierania danych: {data['error']}")
             return 3
 
         teams_list = []
@@ -90,7 +90,6 @@ async def decide(endpoint,data,ctx):
         
     elif endpoint == "/players":
         if "error" in data:
-            #await ctx.send(f"Błąd podczas pobierania danych: {data['error']}")
             return 3
         players_list = []
         for player in data['data']:
@@ -105,7 +104,23 @@ async def decide(endpoint,data,ctx):
             await ctx.send(p.showPlayer())
             
         print("players data")
+        
     elif endpoint == "/fixtures":
+        if "error" in data:
+            return 3
+        
+        matches_list = []
+        for match in data['data']:
+            match_id = match['id']
+            match_teams = match['name']
+            match_score = match['result_info']
+            temp = Match(match_id,match_teams,match_score)
+            matches_list.append(temp) 
+        
+        print("All matches have been loaded...")
+        for m in matches_list:
+            await ctx.send(m.showMatch()) 
+        
         print("players data")
     elif endpoint == "/leagues":
         print("players data")
@@ -202,8 +217,12 @@ async def dataTest(ctx):#debugging func
 async def data_pass(ctx):
     i = 1
     for e in endpoints:
-        await ctx.send(str(i)+". "+e)
-        i+=1
+        if i==3:
+            await ctx.send("3. /matches")
+            i+=1
+        else:
+            await ctx.send(str(i)+". "+e)
+            i+=1
     await ctx.send("Choose what you want to display:")
     print("For loop has ended...")
     def check_endpoint_message(msg):   
