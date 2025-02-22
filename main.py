@@ -88,6 +88,7 @@ async def decide(endpoint,data,ctx):
             await ctx.send(t)
             i+=1
         
+        print("teams data")
     elif endpoint == "/players":
         if "error" in data:
             return 3
@@ -121,9 +122,23 @@ async def decide(endpoint,data,ctx):
         for m in matches_list:
             await ctx.send(m.showMatch()) 
         
-        print("players data")
+        print("matches data")
+    
     elif endpoint == "/leagues":
-        print("players data")
+        if "error" in data:
+            return 3
+        
+        leagues_list = []
+        for league in data['data']:
+            league_name = league['name']
+            leagues_list.append(league_name) 
+        
+        print("All leagues have been loaded...")
+        for l in leagues_list:
+            await ctx.send(l) 
+        
+        print("leagues data")
+    
     elif endpoint == "/seasons":
         print("players data")
     elif endpoint == "/standings":
