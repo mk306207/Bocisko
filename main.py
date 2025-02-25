@@ -306,6 +306,23 @@ async def data_pass(ctx):
     except:
         await ctx.send("TIMEOUT!!!!")
 
+@client.command(pass_context = True)
+async def PLTable(ctx):
+    data = scraper.PLData()
+    table = []
+    data2 = data['standings']
+    if isinstance(data2, list):
+        for standing in data2:
+            if 'rows' in standing:
+                for row in standing['rows']:
+                    team_name = row['team']['name']
+                    table.append(team_name)
+            else:
+                print("BAD ENDPOINTS")
+    else:
+        print("ERROR")
     
+    for t in table:
+        await ctx.send(t)
 
 client.run(Klucz_bota)
