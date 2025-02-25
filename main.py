@@ -15,6 +15,7 @@ from match import Match
 from season import Season
 from standing import Standing
 import scraper
+from team import Team
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -316,13 +317,19 @@ async def PLTable(ctx):
             if 'rows' in standing:
                 for row in standing['rows']:
                     team_name = row['team']['name']
-                    table.append(team_name)
+                    team_position = row['position']
+                    team_wins = row['wins']
+                    team_draws = row['draws']
+                    team_loses = row['losses']
+                    team_points = row['points']
+                    temp = Team(team_name,team_position,team_wins,team_draws,team_loses,team_points)
+                    table.append(temp)
             else:
                 print("BAD ENDPOINTS")
     else:
         print("ERROR")
     
     for t in table:
-        await ctx.send(t)
+        await ctx.send(t.show())
 
 client.run(Klucz_bota)
