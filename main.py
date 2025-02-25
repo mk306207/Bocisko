@@ -331,5 +331,28 @@ async def PLTable(ctx):
     
     for t in table:
         await ctx.send(t.show())
+        
+@client.command(pass_context = True)
+async def t(ctx, name: str):
+    data = scraper.PLData()
+    data2 = data['standings']
+    if isinstance(data2, list):
+        for standing in data2:
+            if 'rows' in standing:
+                for row in standing['rows']:
+                    team_name = row['team']['name']
+                    if(team_name == name):
+                        team_wins = row['wins']
+                        team_draws = row['draws']
+                        team_loses = row['losses']
+                        team_goals_scored = row['scoresFor']
+                        team_goals_conceded = row['scoresAgainst']
+            else:
+                print("BAD ENDPOINTS")
+    else:
+        print("ERROR")
+    await ctx.send(f"Win-Draws-Lose : {team_wins}-{team_draws}-{team_loses}")
+    await ctx.send(f"Goal difference: {float(team_goals_scored)/float(team_goals_conceded)}")
+    
 
 client.run(Klucz_bota)
