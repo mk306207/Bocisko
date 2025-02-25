@@ -14,6 +14,7 @@ from player import Player
 from match import Match
 from season import Season
 from standing import Standing
+import scraper
 
 intents = discord.Intents.default()
 intents.message_content = True
