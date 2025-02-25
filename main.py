@@ -13,6 +13,7 @@ import asyncio
 from player import Player
 from match import Match
 from season import Season
+from standing import Standing
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -23,7 +24,7 @@ client = commands.Bot(command_prefix = '$', intents=intents)
 endpoints = ["/teams","/players","/fixtures","/leagues","/seasons","/standings"]
 
 def get_teams():
-    endpoint = f"{Base_URL}/teams"
+    endpoint = f"{Base_URL}/standings"
     params = {
         "api_token": API_token,
     }
@@ -163,7 +164,19 @@ async def decide(endpoint,data,ctx):
         print("seasons data")
         
     elif endpoint == "/standings":
+        if "error" in data:
+            return 3
+        standings_list = []
+        for standing in data['data']:
+            standing_id = standing['id']
+            standing_pId = standing['participant_id']
+            standing_position = standing['position']
+            temp = Standing(standing_id,standing_pId,standing_position)
+            standings_list.append(temp)
+        for s in standings_list:
+            await ctx.send(s.show())
         print("players data")
+        
 
 @client.event
 async def on_ready():
@@ -247,7 +260,8 @@ async def teams(ctx):
 
 @client.command(pass_context = True)
 async def dataTest(ctx):#debugging func
-    print_all()
+    r = get_teams()
+    print(r)
     
 @client.command(pass_context = True)
 async def data_pass(ctx):
@@ -283,6 +297,7 @@ async def data_pass(ctx):
             await take_endpoint(5,ctx)
             print(endpoints[4])
         elif msg.content == '6':
+            await ctx.send("Merging data, it's gonna take a while...\nIf the team name isn't in the API only id will show up")
             await take_endpoint(6,ctx)
             print(endpoints[5])
         else:
