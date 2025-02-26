@@ -309,7 +309,7 @@ async def data_pass(ctx):
 
 @client.command(pass_context = True)
 async def PLTable(ctx):
-    data = scraper.PLData()
+    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
     table = []
     data2 = data['standings']
     if isinstance(data2, list):
@@ -334,7 +334,8 @@ async def PLTable(ctx):
         
 @client.command(pass_context = True)
 async def t(ctx, name: str):
-    data = scraper.PLData()
+    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
+    match_found = False
     data2 = data['standings']
     if isinstance(data2, list):
         for standing in data2:
@@ -342,6 +343,7 @@ async def t(ctx, name: str):
                 for row in standing['rows']:
                     team_name = row['team']['name']
                     if(team_name == name):
+                        match_found = True
                         team_wins = row['wins']
                         team_draws = row['draws']
                         team_loses = row['losses']
@@ -351,8 +353,12 @@ async def t(ctx, name: str):
                 print("BAD ENDPOINTS")
     else:
         print("ERROR")
-    await ctx.send(f"Win-Draws-Lose : {team_wins}-{team_draws}-{team_loses}")
-    await ctx.send(f"Goal difference: {float(team_goals_scored)/float(team_goals_conceded)}")
+        
+    if(match_found):
+        await ctx.send(f"Win-Draws-Lose : {team_wins}-{team_draws}-{team_loses}")
+        await ctx.send(f"Goal difference: {float(team_goals_scored)/float(team_goals_conceded)}")
+    else:
+        await ctx.send("No team found")
     
 
 client.run(Klucz_bota)
