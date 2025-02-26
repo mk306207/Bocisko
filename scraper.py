@@ -5,7 +5,7 @@ from selenium import webdriver # selenium 4.20.0
 from selenium.webdriver.chrome.service import Service as ChromeService
 
 from webdriver_manager.chrome import ChromeDriverManager # version 4.0.1
-def PLData(sofa_link: str):
+def PLData(sofa_link: str, SofaAPI_key):
     baseURL = None
 
     chromedriver_path = r'C:\Users\kolbe\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe' #ChromeDriverManager.install() did't work for me idk why here i put where i have installed my chromedrivers manually
@@ -25,13 +25,13 @@ def PLData(sofa_link: str):
         pass
 
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
+    #time.sleep(1)
     logs_raw = driver.get_log("performance")
 
     logs = [json.loads(lr["message"])["message"] for lr in logs_raw]
     found = False
     for x in logs:
-        if 'total' in x['params'].get('headers', {}).get(':path', ''):
+        if SofaAPI_key in x['params'].get('headers', {}).get(':path', ''):
             #print(x['params'].get('headers', {}).get(':path'))
             baseURL = x['params'].get('headers', {}).get(':path')
             found = True
@@ -53,3 +53,33 @@ def PLData(sofa_link: str):
     else:
         print("ERROR")
 
+
+
+def PlayerData(sofa_link: str):
+
+    baseURL = "https://www.sofascore.com/api/v1/unique-tournament/17/season/61627/statistics?limit=20&order=-rating&accumulation=total&group=summary"
+    chromedriver_path = r'C:\Users\kolbe\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe'
+    options = webdriver.ChromeOptions()
+    options.set_capability(
+        "goog:loggingPrefs", {"performance": "ALL", "browser": "ALL"}
+    )
+    options.add_argument("--headless")
+
+    driver = webdriver.Chrome(service=ChromeService(chromedriver_path), options=options)
+    driver.set_page_load_timeout(10)
+
+    try:
+        driver.get(sofa_link)
+        
+    except:
+        print("Error in loading site")
+        pass
+
+    response = requests.get(baseURL)
+
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+        return data
+    else:
+        print("ERROR")

@@ -16,6 +16,7 @@ from season import Season
 from standing import Standing
 import scraper
 from team import Team
+from PLplayer import PLPlayer
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -309,7 +310,7 @@ async def data_pass(ctx):
 
 @client.command(pass_context = True)
 async def PLTable(ctx):
-    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
+    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches",'total')
     table = []
     data2 = data['standings']
     if isinstance(data2, list):
@@ -334,7 +335,7 @@ async def PLTable(ctx):
         
 @client.command(pass_context = True)
 async def t(ctx, name: str):
-    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
+    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches",'total') #https://www.sofascore.com/api/v1/unique-tournament/17/season/61627/statistics?limit=20&order=-rating&accumulation=total&group=summary
     match_found = False
     data2 = data['standings']
     if isinstance(data2, list):
@@ -360,5 +361,36 @@ async def t(ctx, name: str):
     else:
         await ctx.send("No team found")
     
+@client.command(pass_context = True)
+async def TOP10_PL(ctx):
+    data = scraper.PlayerData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
+    #data2 = data['standings']
+    players = []
+    print(data)
+    i = 1
+    # if isinstance(data['results'], list):
+    #     for standing in data['results']:
+    #         #print(standing)
+    #         # player_id = i
+    #         # player_name = standing['player']['name']
+            
+    #         # goals = int(standing['goals'])
+    #         # assists = int(standing['assists'])
 
+    #         # player_ga = goals + assists
+    #         # player_team = standing['team']['name']
+            
+    #         # try:
+    #         #     player_avg = float(standing['rating'])
+    #         # except (KeyError, ValueError):
+    #         #     player_avg = 0.0
+            
+    #         # temp = PLPlayer(player_id, player_name, player_ga, player_team, player_avg)
+    #         # players.append(temp)
+    #         # i += 1
+    # else:
+    #     print("ERROR")
+    
+    for p in players:
+        await ctx.send(p.show())
 client.run(Klucz_bota)
