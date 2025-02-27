@@ -366,30 +366,28 @@ async def TOP10_PL(ctx):
     data = scraper.PlayerData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
     #data2 = data['standings']
     players = []
-    print(data)
     i = 1
-    # if isinstance(data['results'], list):
-    #     for standing in data['results']:
-    #         #print(standing)
-    #         # player_id = i
-    #         # player_name = standing['player']['name']
-            
-    #         # goals = int(standing['goals'])
-    #         # assists = int(standing['assists'])
+    if isinstance(data['results'], list):
+        for standing in data['results']:
+            player_id = i
+            player_name = standing['player']['name']
+            player_realID = standing['player']['id']#we must do another api sofa call for THIS player statistics
+            # goals = int(standing['goals'])
+            # assists = int(standing['assists'])
 
-    #         # player_ga = goals + assists
-    #         # player_team = standing['team']['name']
+            # player_ga = goals + assists
+            player_team = standing['team']['name']
             
-    #         # try:
-    #         #     player_avg = float(standing['rating'])
-    #         # except (KeyError, ValueError):
-    #         #     player_avg = 0.0
+            try:
+                player_avg = float(standing['rating'])
+            except (KeyError, ValueError):
+                player_avg = 0.0
             
-    #         # temp = PLPlayer(player_id, player_name, player_ga, player_team, player_avg)
-    #         # players.append(temp)
-    #         # i += 1
-    # else:
-    #     print("ERROR")
+            temp = PLPlayer(player_id, player_name, i, player_team, player_avg) # i is for swap value later
+            players.append(temp)
+            i += 1
+    else:
+        print("ERROR")
     
     for p in players:
         await ctx.send(p.show())
