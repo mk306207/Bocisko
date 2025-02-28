@@ -81,12 +81,11 @@ def PlayerData(sofa_link: str):
 
     if response.status_code == 200:
         data = response.json()
-        print(data)
         return data
     else:
         print("ERROR")
 
-def SinglePlayer(RealIDPlayer):
+def SinglePlayer(RealIDPlayer, prev_pointer=0):
     sofa = ScraperFC.Sofascore()
     data = sofa.scrape_player_league_stats('24/25','EPL')
     last_row = data.index[-1]
@@ -96,11 +95,10 @@ def SinglePlayer(RealIDPlayer):
     while(not Found and i<last_column):
         if last_column == 53:
             checking_id = data.iloc[i,52]
-            print(checking_id)
             if RealIDPlayer == checking_id:
                 goals = data.iloc[i,0]
                 assists = data.iloc[i,10]
-                
+                ptr = i
                 Found = True
 
             else:
@@ -121,7 +119,6 @@ def SinglePlayer(RealIDPlayer):
                 elif Id_condition is True and Goals_condition is True and Assists_coniditon is True:
                     break
             checking_id = data.iloc[i,i_made]
-            print(checking_id)
             if RealIDPlayer == checking_id:
                 goals = data.iloc[i,g]
                 assists = data.iloc[i,a]
@@ -132,7 +129,7 @@ def SinglePlayer(RealIDPlayer):
                 i+=1
                 
     if(Found):
-        return(int(goals),int(assists))
+        return(int(goals),int(assists),ptr)
     else:
         print("Player doesn't exist")
         return 0

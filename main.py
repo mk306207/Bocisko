@@ -366,15 +366,18 @@ async def TOP10_PL(ctx):
     data = scraper.PlayerData("https://www.sofascore.com/pl/turniej/pilka-nozna/england/premier-league/17#id:61627,tab:matches")
     #data2 = data['standings']
     players = []
+    ptr = 0
     i = 1
-    if isinstance(data['results'], list):
+    if isinstance(data['results'], list) and i<11:
         for standing in data['results']:
+            
             player_id = i
             player_name = standing['player']['name']
             player_realID = standing['player']['id']#we must do another api sofa call for THIS player statistics\
-            temp_tuple = scraper.SinglePlayer(player_realID)
+            temp_tuple = scraper.SinglePlayer(player_realID,ptr)
             player_goals = temp_tuple[0]
             player_assists = temp_tuple[1]
+            ptr = temp_tuple[2]
             player_team = standing['team']['name']
             g_a = player_goals+player_assists
 
