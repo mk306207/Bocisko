@@ -371,11 +371,8 @@ async def TOP10_PL(ctx):
         for standing in data['results']:
             player_id = i
             player_name = standing['player']['name']
-            player_realID = standing['player']['id']#we must do another api sofa call for THIS player statistics
-            # goals = int(standing['goals'])
-            # assists = int(standing['assists'])
-
-            # player_ga = goals + assists
+            player_realID = standing['player']['id']#we must do another api sofa call for THIS player statistics\
+            player_slug = standing['player']['slug']
             player_team = standing['team']['name']
             
             try:
@@ -391,4 +388,9 @@ async def TOP10_PL(ctx):
     
     for p in players:
         await ctx.send(p.show())
+
+@client.command(pass_context = True)
+async def test1(ctx):
+    data = scraper.SinglePlayer(159665,"mohamed-salah")
+    
 client.run(Klucz_bota)
