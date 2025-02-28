@@ -372,15 +372,14 @@ async def TOP10_PL(ctx):
             player_id = i
             player_name = standing['player']['name']
             player_realID = standing['player']['id']#we must do another api sofa call for THIS player statistics\
-            player_slug = standing['player']['slug']
+            temp_tuple = scraper.SinglePlayer(player_realID)
+            player_goals = temp_tuple[0]
+            player_assists = temp_tuple[1]
             player_team = standing['team']['name']
+            g_a = player_goals+player_assists
+
             
-            try:
-                player_avg = float(standing['rating'])
-            except (KeyError, ValueError):
-                player_avg = 0.0
-            
-            temp = PLPlayer(player_id, player_name, i, player_team, player_avg) # i is for swap value later
+            temp = PLPlayer(player_id, player_name, g_a, player_team) # i is for swap value later
             players.append(temp)
             i += 1
     else:

@@ -136,5 +136,3 @@ def SinglePlayer(RealIDPlayer):
     else:
         print("Player doesn't exist")
         return 0
-                    
-                
