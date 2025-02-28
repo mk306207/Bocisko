@@ -4,7 +4,7 @@ import requests
 from selenium import webdriver # selenium 4.20.0
 from selenium.webdriver.chrome.service import Service as ChromeService
 import ScraperFC
-
+import openpyxl
 
 from webdriver_manager.chrome import ChromeDriverManager # version 4.0.1
 def PLData(sofa_link: str, SofaAPI_key):
@@ -86,45 +86,55 @@ def PlayerData(sofa_link: str):
     else:
         print("ERROR")
 
-def SinglePlayer(RealIDPlayer,player_slug):
+def SinglePlayer(RealIDPlayer):
     sofa = ScraperFC.Sofascore()
-    headers = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept": "application/json"
-    }
-    sofa_link=f"https://www.sofascore.com/pl/zawodnik/{player_slug}/{RealIDPlayer}"
-    baseURL = f"https://www.sofascore.com/api/v1/player/{RealIDPlayer}/statistics"
-    chromedriver_path = r'C:\Users\kolbe\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe'
-    options = webdriver.ChromeOptions()
-    options.set_capability(
-        "goog:loggingPrefs", {"performance": "ALL", "browser": "ALL"}
-    )
-    options.add_argument("--headless")
-
-    driver = webdriver.Chrome(service=ChromeService(chromedriver_path), options=options)
-    driver.set_page_load_timeout(10)
-
-    try:
-        driver.get(sofa_link)
-        print(True)
-        
-    except:
-        print("Error in loading site")
-        pass
-    
-    #print(sofa.get_valid_seasons(sofa,"EPL"))
-    response = requests.get(baseURL, headers=headers)
     data = sofa.scrape_player_league_stats('24/25','EPL')
-    data.to_excel("scraper_fc.xlsx", index=False)
-        # for s in seasons:
-        #     statistics = s['statistics']
-        #     season_year = s['year']
-        #     with open("response_data.txt", "w") as file:
-        #         json.dump(s, file, indent=4)
-            # if(season_year == "24/25"):
-                # goals = statistics['goals']
-                # print(f"{season_year}g = {goals}")
-                # print(s)
-            
-    # else:
-    #     print("ERROR")
+    last_row = data.index[-1]
+    last_column = data.columns.get_loc(data.columns[-1])
+    i = 0
+    Found = False
+    while(not Found and i<last_column):
+        if last_column == 53:
+            checking_id = data.iloc[i,52]
+            print(checking_id)
+            if RealIDPlayer == checking_id:
+                goals = data.iloc[i,0]
+                assists = data.iloc[i,10]
+                
+                Found = True
+
+            else:
+                i+=1
+        else:
+            col = 0
+            Goals_condition, Assists_coniditon, Id_condition = False
+            for col in range(last_column):
+                if "player id"==data.iloc[0,col]:
+                    Id_condition = True
+                    i_made = col
+                elif "goals" == data.iloc[0,col]:
+                    Goals_condition = True
+                    g = col
+                elif "assists" == data.iloc[0,col]:                  
+                    Assists_coniditon = True
+                    a = col
+                elif Id_condition is True and Goals_condition is True and Assists_coniditon is True:
+                    break
+            checking_id = data.iloc[i,i_made]
+            print(checking_id)
+            if RealIDPlayer == checking_id:
+                goals = data.iloc[i,g]
+                assists = data.iloc[i,a]
+                
+                Found = True
+                print(True)
+            else:
+                i+=1
+                
+    if(Found):
+        return(int(goals),int(assists))
+    else:
+        print("Player doesn't exist")
+        return 0
+                    
+                

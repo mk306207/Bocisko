@@ -391,6 +391,8 @@ async def TOP10_PL(ctx):
 
 @client.command(pass_context = True)
 async def test1(ctx):
-    data = scraper.SinglePlayer(159665,"mohamed-salah")
+    data = scraper.SinglePlayer(159665)
+    print(data)
+    print("Finished")
     
 client.run(Klucz_bota)
