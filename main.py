@@ -432,5 +432,6 @@ async def LLTable(ctx):
     
     for t in table:
         await ctx.send(t.show())
-    
-client.run(Klucz_bota)
+
+if __name__ == "__main__":
+    client.run(Klucz_bota)
