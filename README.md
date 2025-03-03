@@ -8,7 +8,7 @@ There is additional file that isn't in this repository, it is called klucze.py a
 🟣 **Base_URL** - it contains sportmonks.com link, this one : https://api.sportmonks.com/v3/football   
 
 ### TODO
-📌 **PL players statistics** - Make another API call from sofascore to get g/a and their average score per game.  
+✅ **PL players statistics** - Make another API call from sofascore to get g/a and their average score per game.  
 📌 **LaLiga statistics**  
 📌 **Unit tests**  
 📌 **More QOL changes** - Bot is still pretty non-intuitive to use, fix that.  

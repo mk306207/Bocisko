@@ -5,8 +5,13 @@ from selenium import webdriver # selenium 4.20.0
 from selenium.webdriver.chrome.service import Service as ChromeService
 import ScraperFC
 import openpyxl
-
+import unicodedata
 from webdriver_manager.chrome import ChromeDriverManager # version 4.0.1
+from PLplayer import PLPlayer
+
+def remove_accents(text):
+    return ''.join(c for c in unicodedata.normalize('NFKD', text) if not unicodedata.combining(c))
+
 def PLData(sofa_link: str, SofaAPI_key):
     baseURL = None
 
@@ -90,19 +95,17 @@ def SinglePlayer(RealIDPlayer, prev_pointer=0):
     data = sofa.scrape_player_league_stats('24/25','EPL')
     last_row = data.index[-1]
     last_column = data.columns.get_loc(data.columns[-1])
-    i = 0
     Found = False
-    while(not Found and i<last_column):
+    while(not Found and prev_pointer<last_column):
         if last_column == 53:
-            checking_id = data.iloc[i,52]
+            checking_id = data.iloc[prev_pointer,52]
             if RealIDPlayer == checking_id:
-                goals = data.iloc[i,0]
-                assists = data.iloc[i,10]
-                ptr = i
+                goals = data.iloc[prev_pointer,0]
+                assists = data.iloc[prev_pointer,10]
                 Found = True
 
             else:
-                i+=1
+                prev_pointer+=1
         else:
             col = 0
             Goals_condition, Assists_coniditon, Id_condition = False
@@ -118,18 +121,38 @@ def SinglePlayer(RealIDPlayer, prev_pointer=0):
                     a = col
                 elif Id_condition is True and Goals_condition is True and Assists_coniditon is True:
                     break
-            checking_id = data.iloc[i,i_made]
+            checking_id = data.iloc[prev_pointer,i_made]
             if RealIDPlayer == checking_id:
-                goals = data.iloc[i,g]
-                assists = data.iloc[i,a]
+                goals = data.iloc[prev_pointer,g]
+                assists = data.iloc[prev_pointer,a]
                 
                 Found = True
                 print(True)
             else:
-                i+=1
+                prev_pointer+=1
                 
     if(Found):
-        return(int(goals),int(assists),ptr)
+        return(int(goals),int(assists),prev_pointer)
     else:
         print("Player doesn't exist")
         return 0
+    
+def DirectPlayer(PlayerName):
+    sofa = ScraperFC.Sofascore()
+    data = sofa.scrape_player_league_stats('24/25','EPL')
+    i = 0
+    last_column = data.columns.get_loc(data.columns[-1])
+    print(PlayerName)
+    while(i<last_column):
+        if(remove_accents(PlayerName) == remove_accents(data.iloc[i,50])):
+            goals = float(data.iloc[i,0])
+            assists = float(data.iloc[i,10])
+            team = data.iloc[i,51]
+            id = data.iloc[i,52]
+            ga = goals/assists
+            player = PLPlayer(id,PlayerName,ga,team)
+            print(player.show())
+            return (True,player.show())
+        else:
+            i+=1
+    return False

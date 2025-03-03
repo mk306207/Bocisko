@@ -397,4 +397,15 @@ async def test1(ctx):
     print(data)
     print("Finished")
     
+@client.command(pass_context = True)
+async def checkPlayer(ctx,*, name:str):
+    if name is None:
+        await ctx.send("You didn't write a player name!")
+    else:
+        t=scraper.DirectPlayer(name)
+        if not t[0]:
+            await ctx.send(f"Player {name} not found.")
+        else:
+            await ctx.send(t[1])
+    
 client.run(Klucz_bota)
