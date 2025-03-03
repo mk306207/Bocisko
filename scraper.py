@@ -161,19 +161,31 @@ def SinglePlayer(RealIDPlayer, prev_pointer=0):
     
 def DirectPlayer(PlayerName):
     sofa = ScraperFC.Sofascore()
-    data = sofa.scrape_player_league_stats('24/25','EPL')
+    dataPL = sofa.scrape_player_league_stats('24/25','EPL')
+    dataLL = sofa.scrape_player_league_stats('24/25','La Liga')
     i = 0
-    last_column = data.columns.get_loc(data.columns[-1])
-    while(i<last_column):
-        if(remove_accents(PlayerName) == remove_accents(data.iloc[i,50])):
-            goals = int(data.iloc[i,0])
-            assists = int(data.iloc[i,10])
-            team = data.iloc[i,51]
-            id = data.iloc[i,52]
-            ga = goals+assists
-            player = PLPlayer(id,PlayerName,ga,team)
-            print(player.show())
-            return (True,player.show())
-        else:
-            i+=1
+    last_columnPL = dataPL.columns.get_loc(dataPL.columns[-1])
+    last_columnLL = dataLL.columns.get_loc(dataLL.columns[-1])
+    while(i<max(last_columnLL,last_columnPL)):
+        if(i<last_columnPL):
+            if(remove_accents(PlayerName) == remove_accents(dataPL.iloc[i,50])):
+                goals = int(dataPL.iloc[i,0])
+                assists = int(dataPL.iloc[i,10])
+                team = dataPL.iloc[i,51]
+                id = dataPL.iloc[i,52]
+                ga = goals+assists
+                player = PLPlayer(id,PlayerName,ga,team)
+                print(player.show())
+                return (True,player.show())
+        if(i<last_columnLL):
+            if(remove_accents(PlayerName) == remove_accents(dataLL.iloc[i,50])):
+                goals = int(dataLL.iloc[i,0])
+                assists = int(dataLL.iloc[i,10])
+                team = dataLL.iloc[i,51]
+                id = dataLL.iloc[i,52]
+                ga = goals+assists
+                player = PLPlayer(id,PlayerName,ga,team)
+                print(player.show())
+                return (True,player.show())
+        i+=1
     return False

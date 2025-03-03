@@ -407,5 +407,30 @@ async def checkPlayer(ctx,*, name:str):
             await ctx.send(f"Player {name} not found.")
         else:
             await ctx.send(t[1])
+            
+@client.command(pass_context = True)
+async def LLTable(ctx):
+    data = scraper.PLData("https://www.sofascore.com/pl/turniej/pilka-nozna/spain/laliga/8#id:61643",'total')
+    table = []
+    data2 = data['standings']
+    if isinstance(data2, list):
+        for standing in data2:
+            if 'rows' in standing:
+                for row in standing['rows']:
+                    team_name = row['team']['name']
+                    team_position = row['position']
+                    team_wins = row['wins']
+                    team_draws = row['draws']
+                    team_loses = row['losses']
+                    team_points = row['points']
+                    temp = Team(team_name,team_position,team_wins,team_draws,team_loses,team_points)
+                    table.append(temp)
+            else:
+                print("BAD ENDPOINTS")
+    else:
+        print("ERROR")
+    
+    for t in table:
+        await ctx.send(t.show())
     
 client.run(Klucz_bota)
