@@ -403,7 +403,7 @@ async def checkPlayer(ctx,*, name:str):
         await ctx.send("You didn't write a player name!")
     else:
         t=scraper.DirectPlayer(name)
-        if not t[0]:
+        if not t:
             await ctx.send(f"Player {name} not found.")
         else:
             await ctx.send(t[1])

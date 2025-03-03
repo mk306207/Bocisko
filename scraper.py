@@ -9,7 +9,29 @@ import unicodedata
 from webdriver_manager.chrome import ChromeDriverManager # version 4.0.1
 from PLplayer import PLPlayer
 
+Fixes = str.maketrans({
+    "Ø": "O", "ø": "o",
+    "Å": "A", "å": "a",
+    "Æ": "AE", "æ": "ae",
+    "Ä": "Ae", "ä": "ae",
+    "Ö": "Oe", "ö": "oe",
+    "Ü": "Ue", "ü": "ue",
+    "ß": "ss",
+    "Ç": "C", "ç": "c",
+    "Ñ": "N", "ñ": "n",
+    "É": "E", "é": "e",
+    "È": "E", "è": "e",
+    "Ê": "E", "ê": "e",
+    "Ë": "E", "ë": "e",
+    "Ł": "L", "ł": "l",
+    "Đ": "D", "đ": "d",
+    "Ń": "N", "ń": "n",
+    "Š": "S", "š": "s",
+    "Ž": "Z", "ž": "z"
+})
+
 def remove_accents(text):
+    text = text.translate(Fixes)
     return ''.join(c for c in unicodedata.normalize('NFKD', text) if not unicodedata.combining(c))
 
 def PLData(sofa_link: str, SofaAPI_key):
@@ -142,14 +164,13 @@ def DirectPlayer(PlayerName):
     data = sofa.scrape_player_league_stats('24/25','EPL')
     i = 0
     last_column = data.columns.get_loc(data.columns[-1])
-    print(PlayerName)
     while(i<last_column):
         if(remove_accents(PlayerName) == remove_accents(data.iloc[i,50])):
-            goals = float(data.iloc[i,0])
-            assists = float(data.iloc[i,10])
+            goals = int(data.iloc[i,0])
+            assists = int(data.iloc[i,10])
             team = data.iloc[i,51]
             id = data.iloc[i,52]
-            ga = goals/assists
+            ga = goals+assists
             player = PLPlayer(id,PlayerName,ga,team)
             print(player.show())
             return (True,player.show())
