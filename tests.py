@@ -76,3 +76,11 @@ async def test_OnJoin(bot_client):
 
     mock_channel.send.assert_called_once_with(f"Hello <@1234567890>")
     
+@pytest.mark.asyncio
+async def test_OnLeave(bot_client):
+    mock_member = AsyncMock()
+    mock_channel = AsyncMock()
+    mock_channel.send = AsyncMock()
+    with patch.object(bot_client, "get_channel",return_value = mock_channel):
+        await bot_client.on_member_remove(mock_member)
+    mock_channel.send.assert_called_once_with("Goodbye :(")

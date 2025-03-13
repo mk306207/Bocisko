@@ -10,5 +10,5 @@ There is additional file that isn't in this repository, it is called klucze.py a
 ### TODO
 ✅ **PL players statistics** - Make another API call from sofascore to get g/a and their average score per game.  
 ✅ **LaLiga statistics**  
-📌 **Unit tests**  
+⏳ **Unit tests**  
 📌 **More QOL changes** - Bot is still pretty non-intuitive to use, fix that.  
