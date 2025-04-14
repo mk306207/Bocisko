@@ -65,15 +65,14 @@ async def test_TOP10(bot_client):
 @pytest.mark.asyncio
 async def test_OnJoin(bot_client):
     mock_member = AsyncMock()
-    mock_member.mention = "<@1234567890>"  # Teraz ustawiamy poprawny format wzmianek
-    mock_member.name = "TestUser"  # Ustawiamy nazwę użytkownika
+    mock_member.mention = "<@1234567890>"
+    mock_member.name = "TestUser"
     mock_member.id = 1234567890
     mock_member.__radd__.side_effect = lambda other: other + mock_member.mention
     mock_channel = AsyncMock()
     mock_channel.send = AsyncMock()
     with patch.object(bot_client, "get_channel", return_value=mock_channel):
         await bot_client.on_member_join(mock_member)
-
     mock_channel.send.assert_called_once_with(f"Hello <@1234567890>")
     
 @pytest.mark.asyncio
