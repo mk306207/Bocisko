@@ -15,12 +15,14 @@ Stands for basic data for players competing in Premier League and LaLiga. It con
 - player name,  
 - g/a,  
 - name of player's team.  
+
 This class also have one method, show(). It's used just to help bot type info about certain player in proper formatting.  
 
 ### Player  
 Almost same as PLplayer but it is used for sportmonks API. It contains less information, because I used the free version. Class fields:  
 - player id,  
 - player name.  
+
 Again, one method for formating.  
 
 ### Match  
@@ -28,6 +30,7 @@ This class is helpful for storing data from sportmonks API. It contains info abo
 - match id,  
 - teams names,  
 - final score.  
+
 Same as before it has one method (showMatch()), again only for proper text formatting.  
 
 ### Standing   
@@ -35,6 +38,8 @@ This class is quite different from the other ones. It has __init__() method, whe
 - standing id,  
 - standing participant id,  
 - standing position.  
+
+
 Again some kind od show() method.  
 
 ### Season  
@@ -42,6 +47,8 @@ Class for sportmonks API data, contains very basic info about seasons, it contai
 - season id,  
 - season name,  
 - field that states if season is finished or not.  
+
+
 Again some kind od show() method.  
 
 ### Team  
