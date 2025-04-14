@@ -9,13 +9,24 @@ There is additional file that isn't in this repository, it is called klucze.py a
 
 ## Classes 
 ### PLplayer  
-Stands for basic data for players competing in Premier League. It contains info about:  
+Stands for basic data for players competing in Premier League and LaLiga. It contains info about:  
 - player id,  
 - player name,  
 - g/a,  
 - name of player's team.  
 This class also have one method, show(). It's used just to help bot type info about certain player in proper formatting.  
+### Player  
+
 ### Match  
+This class is helpful for storing data from sportmonks API. It contains info about:  
+- match id,  
+- teams names,  
+- final score.  
+Same as before it has one method (showMatch()), again only for proper text formatting.  
+
+### Standing   
+### Season  
+### Team  
 
 ### TODO
 ✅ **PL players statistics** - Make another API call from sofascore to get g/a and their average score per game.  
