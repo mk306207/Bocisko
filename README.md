@@ -39,7 +39,6 @@ This class is quite different from the other ones. It has __init__() method, whe
 - standing participant id,  
 - standing position.  
 
-
 Again some kind od show() method.  
 
 ### Season  
@@ -47,7 +46,6 @@ Class for sportmonks API data, contains very basic info about seasons, it contai
 - season id,  
 - season name,  
 - field that states if season is finished or not.  
-
 
 Again some kind od show() method.  
 
@@ -59,7 +57,10 @@ Class used for scraped data from Premier League and LaLiga. It contains:
 - team draws,  
 - team loses,  
 - team points in league.  
+
 Same as all above, one show() method.
+
+## Functions  
 
 ### TODO
 ✅ **PL players statistics** - Make another API call from sofascore to get g/a and their average score per game.  
