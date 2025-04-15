@@ -16,7 +16,7 @@ Stands for basic data for players competing in Premier League and LaLiga. It con
 - g/a,  
 - name of player's team.  
 
-This class also have one method, show(). It's used just to help bot type info about certain player in proper formatting.  
+This class have one method, show(). It's used just to help bot type info about certain player in proper formatting.  
 
 ### Player  
 Almost same as PLplayer but it is used for sportmonks API. It contains less information, because I used the free version. Class fields:  
